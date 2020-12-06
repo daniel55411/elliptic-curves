@@ -8,6 +8,8 @@ from typing import TypeVar
 
 from numpy.polynomial import Polynomial
 
+from src.elliptic.errors import CalculationError
+from src.elliptic.errors import InfinitePoint
 from src.field import Field
 from src.field import GF2PolynomialField
 from src.field import ZpField
@@ -27,10 +29,6 @@ class Point(Generic[T]):
 
     def is_infinite(self):
         return self.x is None and self.y is None
-
-
-class InfinitePoint(Exception):
-    pass
 
 
 class Curve(Generic[T], metaclass=ABCMeta):
@@ -139,13 +137,29 @@ class ZpCurve(Curve[int]):
         return Point(x3, self._field.modulus(-y3))
 
 
-class GF2Curve(Curve[Polynomial]):
+class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):
     def __init__(self, p: Polynomial, a: Polynomial, b: Polynomial, c: Polynomial):
         self._a = a
         self._b = b
         self._c = c
         super().__init__(field_order=p, field_cls=GF2PolynomialField)
 
+    def _additive_point(
+        self,
+        first_point: Point[Polynomial],
+        second_point: Point[Polynomial],
+        coefficient: Polynomial,
+    ) -> Point[Polynomial]:
+        x3 = self._field.modulus(
+            coefficient ** 2 + self._a * coefficient +
+            self._b + first_point.x + second_point.x,
+        )
+        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
+
+        return Point(x3, self._field.modulus(self._a * x3 + y3))
+
+
+class GF2NotSupersingularCurve(GF2CurveBase):
     def _first_case_coefficient(
         self,
         first_point: Point[Polynomial],
@@ -164,7 +178,7 @@ class GF2Curve(Curve[Polynomial]):
         if second_point.y == self._a * first_point.x + first_point.y:
             raise InfinitePoint
 
-        raise RuntimeError(f'{self.__class__}: Я не знаю как считать 2 случай')
+        raise CalculationError(f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
 
     def _third_case_coefficient(
         self,
@@ -176,16 +190,37 @@ class GF2Curve(Curve[Polynomial]):
             self._field.invert((self._a * first_point.x)),
         )
 
-    def _additive_point(
+
+class GF2SupersingularCurve(GF2CurveBase):
+    def _first_case_coefficient(
         self,
         first_point: Point[Polynomial],
         second_point: Point[Polynomial],
-        coefficient: Polynomial,
-    ) -> Point[Polynomial]:
-        x3 = self._field.modulus(
-            coefficient ** 2 + self._a * coefficient +
-            self._b + first_point.x + second_point.x,
+    ) -> Polynomial:
+        return self._field.modulus(
+            (first_point.y + second_point.y) *
+            self._field.invert(first_point.x + second_point.x),
         )
-        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
 
-        return Point(x3, self._field.modulus(self._a * x3 + y3))
+    def _second_case_coefficient(
+        self,
+        first_point: Point[Polynomial],
+        second_point: Point[Polynomial],
+    ) -> Polynomial:  # noqa
+        if second_point.y == self._a + first_point.y:
+            raise InfinitePoint
+
+        raise CalculationError(f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
+
+    def _third_case_coefficient(
+        self,
+        first_point: Point[Polynomial],
+        second_point: Point[Polynomial],
+    ) -> Polynomial:
+        if self._a == 0:
+            raise CalculationError('Коэффийициент a не может быть 0')
+
+        return self._field.modulus(
+            (first_point.x ** 2 + self._b) *
+            self._field.invert(self._a),
+        )
