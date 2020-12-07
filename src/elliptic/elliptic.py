@@ -218,7 +218,7 @@ class GF2SupersingularCurve(GF2CurveBase):
         second_point: Point[Polynomial],
     ) -> Polynomial:
         if self._a == 0:
-            raise CalculationError('Коэффийициент a не может быть 0')
+            raise CalculationError('Коэффиициент a не может быть 0')
 
         return self._field.modulus(
             (first_point.x ** 2 + self._b) *

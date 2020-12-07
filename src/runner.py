@@ -16,7 +16,7 @@ from src.elliptic.elliptic import GF2NotSupersingularCurve
 from src.elliptic.elliptic import GF2SupersingularCurve
 from src.elliptic.elliptic import Point
 from src.elliptic.elliptic import ZpCurve
-from src.polynomial.polynomial import get_irreducible_polynomial
+from src.polynomial.irreducible import get_irreducible_polynomial
 
 
 T = TypeVar('T')
@@ -39,7 +39,7 @@ class TaskConfig(Generic[T]):
         Tuple[Point[T], Point[T]],
         Tuple[Point[T]],
     ]
-    scalar: Optional[int]
+    scalar: Optional[int] = None
 
 
 @dataclass

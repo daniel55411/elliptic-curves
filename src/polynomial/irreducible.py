@@ -1,16 +1,10 @@
-import re
-
 from numpy.polynomial import Polynomial
 
-from src.polynomial.errors import PolynomialParseError
+from src.parser.polynomial import parse_polynomial
 from src.polynomial.errors import UnknownIrreduciblePolynomialPower
 
-
-__all__ = ['parse_polynomial', 'get_irreducible_polynomial', 'get_polynomial_from_int']
-
-
 GF2_IRREDUCIBLE_POLYNOMIALS_DIRECTORY = {
-    2: 'x^2+x+1,',
+    2: 'x^2+x+1',
     3: 'x^3+x+1',
     4: 'x^4+x+1',
     5: 'x^5+x^2+1',
@@ -56,52 +50,10 @@ GF2_IRREDUCIBLE_POLYNOMIALS_DIRECTORY = {
 }
 
 
-class _GF2IrreduciblePolynomialParser:
-    MONOMIAL_PATTERN = re.compile(r'^(?:(\d+)\*?)?x\^(\d+)$')
-
-    @classmethod
-    def parse(cls, polynomial_raw: str) -> Polynomial:
-        polynomial_raw = (
-            polynomial_raw
-            .replace(' ', '')
-            .replace('-', '+')
-            .strip(' +')
-        )
-
-        polynomial_powers = []
-        for monomial_raw in polynomial_raw.split('+'):
-            match = cls.MONOMIAL_PATTERN.match(monomial_raw)
-
-            if match is None:
-                raise PolynomialParseError(monomial_raw, polynomial_raw)
-
-            scalar = int(match.group(1)) % 2
-            power = int(match.group(2))
-
-            if scalar != 0:
-                polynomial_powers.append(power)
-
-        polynomial_array = [0] * max(polynomial_powers)
-
-        for power in polynomial_powers:
-            polynomial_array[power] = 1
-
-        return Polynomial(polynomial_array)
-
-
-def parse_polynomial(polynomial: str) -> Polynomial:
-    return _GF2IrreduciblePolynomialParser.parse(polynomial)
-
-
 def get_irreducible_polynomial(power: int) -> Polynomial:
     if power not in GF2_IRREDUCIBLE_POLYNOMIALS_DIRECTORY:
         raise UnknownIrreduciblePolynomialPower(power)
 
     polynomial = GF2_IRREDUCIBLE_POLYNOMIALS_DIRECTORY[power]
 
-    return _GF2IrreduciblePolynomialParser.parse(polynomial)
-
-
-def get_polynomial_from_int(number: int) -> Polynomial:
-    bits = list(map(int, list('{0:0b}'.format(number))))
-    return Polynomial(bits)
+    return parse_polynomial(polynomial)
