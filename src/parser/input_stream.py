@@ -191,4 +191,9 @@ class Parser(Generic[T]):
 
         parser_ctx = _ParserContext(configurator, parse_point_operand_function)
 
-        return parser_ctx.do_parse(input_lines)
+        try:
+            return parser_ctx.do_parse(input_lines)
+        except ParserError:
+            raise
+        except Exception as e:
+            raise ParserError from e

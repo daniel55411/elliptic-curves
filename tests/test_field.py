@@ -1,3 +1,9 @@
+from typing import List
+
+import pytest
+from numpy.polynomial import Polynomial
+
+from src.field import GF2PolynomialField
 from src.field import ZpField
 
 
@@ -19,3 +25,48 @@ def test_zp_field_modulus():
     assert field.modulus(24) == 2
     assert field.modulus(-1) == 10
     assert field.modulus(-56) == 10
+
+
+@pytest.mark.parametrize(
+    'polynomial_coef, invert_polynomial_coef',
+    [
+        ([0., 0., 0., 1.], [1., 1., 1., 1.]),
+        ([1., 1., 0., 1.], [1., 0., 1.]),
+        ([1.], [1.]),
+    ],
+)
+def test_gf2_field_invert(polynomial_coef, invert_polynomial_coef):
+    """
+    Тест над полем с характеристикой 2 над многочленом x^4 + x + 1
+    """
+    def assert_invert(poly_1: Polynomial, poly_2: Polynomial):
+        actual = field.invert(poly_1)
+        actual = field.normalize_element(actual)
+
+        assert poly_2.has_samecoef(actual)
+
+    field = GF2PolynomialField(Polynomial([1., 1., 0., 0., 1.]))
+
+    polynomial = Polynomial(polynomial_coef)
+    invert_polynomial = Polynomial(invert_polynomial_coef)
+
+    assert_invert(polynomial, invert_polynomial)
+    assert_invert(invert_polynomial, polynomial)
+
+
+def test_gf2_field_modulus():
+    """
+    Тест над полем с характеристикой 2 над многочленом x^4 + x + 1
+    """
+
+    def modulus_polynomial(polynomial_coef: List[float]) -> Polynomial:
+        polynomial = field.modulus(Polynomial(polynomial_coef))
+        return field.normalize_element(polynomial)
+
+    field = GF2PolynomialField(Polynomial([1., 1., 0., 0., 1.]))
+
+    # assert list(modulus_polynomial([.0, 1.]).coef) == [0., 1.]
+    # assert list(modulus_polynomial([0., 0., 0., 0., 1.]).coef) == [1., 1.]
+    # assert list(modulus_polynomial([*([0.] * 12), 1.]).coef) == [1., 1., 1., 1.]
+    print(list(modulus_polynomial([*([0.] * 15), 1.]).coef))
+    assert list(modulus_polynomial([*([0.] * 15), 1.]).coef) == [1.]
