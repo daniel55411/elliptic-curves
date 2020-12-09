@@ -1,6 +1,7 @@
 import re
 from abc import ABCMeta
 from abc import abstractmethod
+from collections import Counter
 from dataclasses import dataclass
 from typing import Any
 from typing import Callable
@@ -17,13 +18,23 @@ from src.parser.common import parse_int
 from src.parser.errors import ParserError
 from src.parser.polynomial import parse_polynomial
 from src.polynomial.utils import get_polynomial_from_int
-from src.runner import FieldType
-from src.runner import TaskConfig
-from src.runner import TaskRunnerConfig
-from src.runner import TaskType
+from src.task import FieldType
+from src.task import TaskConfig
+from src.task import TaskRunnerConfig
+from src.task import TaskType
 
 
 T = TypeVar('T')
+
+
+INT_BASE_METRIC = Counter()
+
+
+def _parse_int(number_str: str) -> int:
+    value, base = parse_int(number_str, return_with_base=True)
+    INT_BASE_METRIC[base] += 1
+
+    return value
 
 
 class ArgsProvider(metaclass=ABCMeta):
@@ -34,14 +45,14 @@ class ArgsProvider(metaclass=ABCMeta):
 
 class ZpFieldArgsProvider(ArgsProvider):
     def provide(self, input_lines: Iterator[str]) -> List[Any]:
-        return [parse_int(next(input_lines))]
+        return [_parse_int(next(input_lines))]
 
 
 class ZpCurveArgsProvider(ArgsProvider):
     def provide(self, input_lines: Iterator[str]) -> List[Any]:
         return [
-            parse_int(next(input_lines)),
-            parse_int(next(input_lines)),
+            _parse_int(next(input_lines)),
+            _parse_int(next(input_lines)),
         ]
 
 
@@ -50,7 +61,7 @@ class GF2FieldArgsProvider(ArgsProvider):
         value = next(input_lines)
 
         if value.startswith('m:'):
-            return [parse_int(value)]
+            return [_parse_int(value)]
 
         return [parse_polynomial(value)]
 
@@ -58,16 +69,16 @@ class GF2FieldArgsProvider(ArgsProvider):
 class GF2CurveArgsProvider(ArgsProvider):
     def provide(self, input_lines: Iterator[str]) -> List[Any]:
         return [
-            get_polynomial_from_int(parse_int(next(input_lines))),
-            get_polynomial_from_int(parse_int(next(input_lines))),
-            get_polynomial_from_int(parse_int(next(input_lines))),
-            get_polynomial_from_int(parse_int(next(input_lines))),
-            get_polynomial_from_int(parse_int(next(input_lines))),
+            get_polynomial_from_int(_parse_int(next(input_lines))),
+            get_polynomial_from_int(_parse_int(next(input_lines))),
+            get_polynomial_from_int(_parse_int(next(input_lines))),
+            get_polynomial_from_int(_parse_int(next(input_lines))),
+            get_polynomial_from_int(_parse_int(next(input_lines))),
         ]
 
 
 def parse_int_polynomial(number_str: str) -> Polynomial:
-    return get_polynomial_from_int(parse_int(number_str))
+    return get_polynomial_from_int(_parse_int(number_str))
 
 
 @dataclass
@@ -92,7 +103,7 @@ FIELDS_CONFIGURATORS_MAP = {
 
 
 PARSE_POINT_OPERAND_FUNCTIONS_MAP = {
-    FieldType.Z_p: parse_int,
+    FieldType.Z_p: _parse_int,
     FieldType.GF: parse_int_polynomial,
 }
 
@@ -163,7 +174,7 @@ class _ParserContext(Generic[T]):
 
     def _parse_task_operand(self, operand: str) -> Union[int, Point[T]]:
         if '(' not in operand:
-            return parse_int(operand)
+            return _parse_int(operand)
 
         match = self.POINT_PATTERN.match(operand)
 

@@ -65,8 +65,7 @@ def test_gf2_field_modulus():
 
     field = GF2PolynomialField(Polynomial([1., 1., 0., 0., 1.]))
 
-    # assert list(modulus_polynomial([.0, 1.]).coef) == [0., 1.]
-    # assert list(modulus_polynomial([0., 0., 0., 0., 1.]).coef) == [1., 1.]
-    # assert list(modulus_polynomial([*([0.] * 12), 1.]).coef) == [1., 1., 1., 1.]
-    print(list(modulus_polynomial([*([0.] * 15), 1.]).coef))
+    assert list(modulus_polynomial([.0, 1.]).coef) == [0., 1.]
+    assert list(modulus_polynomial([0., 0., 0., 0., 1.]).coef) == [1., 1.]
+    assert list(modulus_polynomial([*([0.] * 12), 1.]).coef) == [1., 1., 1., 1.]
     assert list(modulus_polynomial([*([0.] * 15), 1.]).coef) == [1.]

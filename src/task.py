@@ -43,6 +43,12 @@ class TaskConfig(Generic[T]):
 
 
 @dataclass
+class TaskResult(Generic[T]):
+    task_config: TaskConfig[T]
+    result: Point[T]
+
+
+@dataclass
 class TaskRunnerConfig(Generic[T]):
     field_type: FieldType
     field_args: List[Union[int, Polynomial]]
@@ -83,12 +89,16 @@ class TaskRunnerConfig(Generic[T]):
 class TaskRunner:
     curve: Curve[T]
 
-    def run(self, tasks: List[TaskConfig[T]]) -> Iterable[Point[T]]:
+    def run(self, tasks: List[TaskConfig[T]]) -> Iterable[TaskResult[T]]:
         for task in tasks:
             yield self._run_task(task)
 
-    def _run_task(self, task: TaskConfig) -> Point[T]:
+    def _run_task(self, task: TaskConfig) -> TaskResult[T]:
         if task.task_type is TaskType.ADD:
-            return self.curve.add(task.points[0], task.points[1])
+            result = self.curve.add(task.points[0], task.points[1])
         elif task.task_type is TaskType.MUL:
-            return self.curve.mul(task.points[0], task.scalar)
+            result = self.curve.mul(task.points[0], task.scalar)
+        else:
+            raise ValueError(f'Не знаю как считать операцию: {task.task_type}')
+
+        return TaskResult(task, result)

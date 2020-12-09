@@ -1,4 +1,8 @@
-def parse_int(number_str: str) -> int:
+from typing import Tuple
+from typing import Union
+
+
+def parse_int(number_str: str, return_with_base: bool = False) -> Union[int, Tuple[int, int]]:
     base = 10
 
     if number_str.startswith('0x'):
@@ -10,4 +14,9 @@ def parse_int(number_str: str) -> int:
     if number_str.startswith('0o'):
         base = 8
 
-    return int(number_str, base)
+    value = int(number_str, base)
+
+    if return_with_base:
+        return value, base
+
+    return value
