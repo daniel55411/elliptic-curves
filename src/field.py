@@ -35,7 +35,7 @@ class Field(Generic[T], metaclass=ABCMeta):
         return element % self._order
 
     def normalize_element(self, element: T) -> T:
-        pass
+        return element
 
     @classmethod
     @abstractmethod

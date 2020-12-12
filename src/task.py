@@ -32,7 +32,7 @@ class FieldType(Enum):
     GF = auto()
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class TaskConfig(Generic[T]):
     task_type: TaskType
     points: Union[
@@ -42,17 +42,17 @@ class TaskConfig(Generic[T]):
     scalar: Optional[int] = None
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class TaskResult(Generic[T]):
     task_config: TaskConfig[T]
     result: Point[T]
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class TaskRunnerConfig(Generic[T]):
     field_type: FieldType
     field_args: List[Union[int, Polynomial]]
-    curve_args: List[int]
+    curve_args: List[Union[int, Polynomial]]
     task_configs: List[TaskConfig[T]]
 
     def build_runner(self):
@@ -71,7 +71,7 @@ class TaskRunnerConfig(Generic[T]):
             except ValueError:
                 raise ValueError('Неверное число коэффициентов эллиптической кривой')
 
-            bool_args = list(map(lambda poly: bool(poly.coef), self.curve_args))
+            bool_args = list(map(lambda poly: list(poly.coef) != [0.], self.curve_args))
             if bool_args == [True, False, True, False, True]:
                 curve = GF2NotSupersingularCurve(p, a1, a3, a5)
             elif bool_args == [False, True, False, True, True]:

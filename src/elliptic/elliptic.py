@@ -18,7 +18,7 @@ from src.field import ZpField
 T = TypeVar('T')
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Point(Generic[T]):
     x: Optional[T]
     y: Optional[T]
@@ -55,7 +55,12 @@ class Curve(Generic[T], metaclass=ABCMeta):
         except InfinitePoint:
             return Point.infinity()
 
-        return self._additive_point(first_point, second_point, coefficient=k)
+        k = self._field.normalize_element(k)
+        result_point = self._additive_point(first_point, second_point, coefficient=k)
+        result_point.x = self._field.normalize_element(result_point.x)
+        result_point.y = self._field.normalize_element(result_point.y)
+
+        return result_point
 
     def mul(self, first_point: Point[T], scalar: int) -> Point[T]:
         result = Point.infinity()
@@ -144,20 +149,6 @@ class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):
         self._c = c
         super().__init__(field_order=p, field_cls=GF2PolynomialField)
 
-    def _additive_point(
-        self,
-        first_point: Point[Polynomial],
-        second_point: Point[Polynomial],
-        coefficient: Polynomial,
-    ) -> Point[Polynomial]:
-        x3 = self._field.modulus(
-            coefficient ** 2 + self._a * coefficient +
-            self._b + first_point.x + second_point.x,
-        )
-        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
-
-        return Point(x3, self._field.modulus(self._a * x3 + y3))
-
 
 class GF2NotSupersingularCurve(GF2CurveBase):
     def _first_case_coefficient(
@@ -189,6 +180,20 @@ class GF2NotSupersingularCurve(GF2CurveBase):
             (first_point.x ** 2 + self._a * first_point.y) *
             self._field.invert((self._a * first_point.x)),
         )
+
+    def _additive_point(
+        self,
+        first_point: Point[Polynomial],
+        second_point: Point[Polynomial],
+        coefficient: Polynomial,
+    ) -> Point[Polynomial]:
+        x3 = self._field.modulus(
+            coefficient ** 2 + self._a * coefficient +
+            self._b + first_point.x + second_point.x,
+        )
+        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
+
+        return Point(x3, self._field.modulus(self._a * x3 + y3))
 
 
 class GF2SupersingularCurve(GF2CurveBase):
@@ -224,3 +229,17 @@ class GF2SupersingularCurve(GF2CurveBase):
             (first_point.x ** 2 + self._b) *
             self._field.invert(self._a),
         )
+
+    def _additive_point(
+        self,
+        first_point: Point[Polynomial],
+        second_point: Point[Polynomial],
+        coefficient: Polynomial,
+    ) -> Point[Polynomial]:
+        x3 = self._field.modulus(
+            coefficient ** 2 + self._a * coefficient +
+            self._b + first_point.x + second_point.x,
+        )
+        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
+
+        return Point(x3, self._field.modulus(self._a + y3))

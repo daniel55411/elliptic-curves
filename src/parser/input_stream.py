@@ -61,7 +61,7 @@ class GF2FieldArgsProvider(ArgsProvider):
         value = next(input_lines)
 
         if value.startswith('m:'):
-            return [_parse_int(value)]
+            return [_parse_int(value.strip('m: '))]
 
         return [parse_polynomial(value)]
 
@@ -115,8 +115,9 @@ TASKS_TYPES_MAP = {
 
 
 class _ParserContext(Generic[T]):
+    POINT_SANITIZER_PATTERN = re.compile(r'(?:(?<!\()\s+(?!\))|(?<=\()\s+|\s+(?=\)))')
     TOKENS_DELIMITER = re.compile(r'\s+')
-    POINT_PATTERN = re.compile(r'\(\s*((?:0x|0o|0b)?\d+)\s*,\s*((?:0x|0o|0b)?\d+)\s*\)')
+    POINT_PATTERN = re.compile(r'\(\s*((?:0x|0o|0b)?[\dabcdf]+)\s*,\s*((?:0x|0o|0b)?[\dabcdf]+)\s*\)')
 
     def __init__(
         self,
@@ -139,13 +140,16 @@ class _ParserContext(Generic[T]):
         )
 
     def _parse_task(self, line: str) -> TaskConfig[T]:
+        line = line.lower().strip()
+        line = self.POINT_PATTERN.sub(r'(\1,\2)', line)
+
         try:
             task_type, operand_1, operand_2 = self.TOKENS_DELIMITER.split(line.lower())
         except ValueError:
             raise ParserError(f'Ошибка парсинга задачи: {line}')
 
         try:
-            task_type = TASKS_TYPES_MAP[line]
+            task_type = TASKS_TYPES_MAP[task_type]
         except KeyError:
             raise ParserError(f'Неизвестный тип операции: {line}')
 
@@ -164,13 +168,13 @@ class _ParserContext(Generic[T]):
             if len(points) != 2:
                 raise ValueError(f'Для операции сложения оба операнда должны быть точки: {line}')
 
-            return TaskConfig(task_type, points=tuple(*points))
+            return TaskConfig(task_type, points=tuple(points))  # noqa
 
         if task_type is TaskType.MUL:
             if len(points) != 1 or len(scalars) != 1:
                 raise ValueError(f'Для операции умножения один операнда - точка, второй - скаляр: {line}')
 
-            return TaskConfig(task_type, points=tuple(*points), scalar=scalars[0])
+            return TaskConfig(task_type, points=tuple(points), scalar=scalars[0])  # noqa
 
     def _parse_task_operand(self, operand: str) -> Union[int, Point[T]]:
         if '(' not in operand:
@@ -187,9 +191,9 @@ class _ParserContext(Generic[T]):
         )
 
 
-class Parser(Generic[T]):
+class Parser:
     @staticmethod
-    def parse(input_lines: Iterator[str]) -> TaskRunnerConfig[T]:
+    def parse(input_lines: Iterator[str]) -> TaskRunnerConfig:
         field_type = next(input_lines)
 
         if field_type not in FIELDS_CONFIGURATORS_MAP:
