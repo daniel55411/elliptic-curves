@@ -3,6 +3,7 @@ import logging
 import os.path
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
+from typing import Optional
 
 from src.output import FormattersRegistry
 from src.output import IntFormatter
@@ -46,14 +47,14 @@ def _check_error(future: Future):
         logger.error('Ошибка: %s', str(future.exception()).strip())
 
 
-def run(filename: str, dst_directory: str):
+def run(filename: str, dst_directory: str, base: Optional[int]):
     input_f = open(filename, 'r')
     filename = os.path.basename(filename)
 
     config = parser.parse(input_lines=iter(input_f))
     logger.info('Считал конфигурацию у файла %s. Начинаю построение таск раннера...', filename)
     task_runner = config.build_runner()
-    formatter_context = {'base': _get_most_common_base()}
+    formatter_context = {'base': base or _get_most_common_base()}
     logger.info(
         'В файле %s числа будут переведены в основание %d',
         filename, formatter_context['base'],
@@ -66,10 +67,10 @@ def run(filename: str, dst_directory: str):
             task_result_str = task_result_config.format(task_result, formatter_context)
             output_f.write(task_result_str + os.linesep)
 
-    logger.info('Таск раннер завершил все подсчеты. Все результаты записаны в файл %s', filename)
+    logger.info('Файл %s обработан; результаты записаны', filename)
 
 
-def run_on_directory(src_directory: str, dst_directory: str):
+def run_on_directory(src_directory: str, dst_directory: str, base: int):
     logger.info(
         'Запустилась обработка директории %s',
         os.path.abspath(src_directory),
@@ -80,7 +81,7 @@ def run_on_directory(src_directory: str, dst_directory: str):
 
         for filename in glob.iglob(pattern):
             logger.info('Начал подсчет для файла %s', filename)
-            future = executor.submit(run, filename, dst_directory)
+            future = executor.submit(run, filename, dst_directory, base)
             future.add_done_callback(_check_error)
 
     logger.info('Завершил работу со всеми файлами')
