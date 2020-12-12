@@ -21,6 +21,8 @@ class _GF2IrreduciblePolynomialParser:
 
         polynomial_powers = []
         for monomial_raw in polynomial_raw.split('+'):
+            monomial_raw = monomial_raw.strip()
+
             if monomial_raw.isnumeric():
                 scalar = parse_int(monomial_raw) % 2
 

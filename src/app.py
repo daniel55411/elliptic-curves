@@ -1,6 +1,7 @@
 import glob
 import logging
 import os.path
+from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 
 from src.output import FormattersRegistry
@@ -40,8 +41,15 @@ def _get_most_common_base():
     return INT_BASE_METRIC.most_common()[0][0]
 
 
+def _check_error(future: Future):
+    if future.exception() is not None:
+        logger.error('Ошибка: %s', str(future.exception()).strip())
+
+
 def run(filename: str, dst_directory: str):
     input_f = open(filename, 'r')
+    filename = os.path.basename(filename)
+
     config = parser.parse(input_lines=iter(input_f))
     logger.info('Считал конфигурацию у файла %s. Начинаю построение таск раннера...', filename)
     task_runner = config.build_runner()
@@ -72,7 +80,8 @@ def run_on_directory(src_directory: str, dst_directory: str):
 
         for filename in glob.iglob(pattern):
             logger.info('Начал подсчет для файла %s', filename)
-            executor.submit(run, filename, dst_directory)
+            future = executor.submit(run, filename, dst_directory)
+            future.add_done_callback(_check_error)
 
     logger.info('Завершил работу со всеми файлами')
     logger.info(

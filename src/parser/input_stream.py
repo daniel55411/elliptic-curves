@@ -117,7 +117,7 @@ TASKS_TYPES_MAP = {
 class _ParserContext(Generic[T]):
     POINT_SANITIZER_PATTERN = re.compile(r'(?:(?<!\()\s+(?!\))|(?<=\()\s+|\s+(?=\)))')
     TOKENS_DELIMITER = re.compile(r'\s+')
-    POINT_PATTERN = re.compile(r'\(\s*((?:0x|0o|0b)?[\dabcdf]+)\s*,\s*((?:0x|0o|0b)?[\dabcdf]+)\s*\)')
+    POINT_PATTERN = re.compile(r'\(\s*((?:0x|0o|0b)?[\dabcdef]+)\s*,\s*((?:0x|0o|0b)?[\dabcdef]+)\s*\)')
 
     def __init__(
         self,
@@ -194,10 +194,10 @@ class _ParserContext(Generic[T]):
 class Parser:
     @staticmethod
     def parse(input_lines: Iterator[str]) -> TaskRunnerConfig:
-        field_type = next(input_lines)
+        field_type = next(input_lines).strip()
 
         if field_type not in FIELDS_CONFIGURATORS_MAP:
-            raise ParserError('Неизвестное поле')
+            raise ParserError(f'Неизвестное тип поля: {field_type}')
 
         configurator = FIELDS_CONFIGURATORS_MAP[field_type]
         parse_point_operand_function = (

@@ -13,8 +13,8 @@ def main():
     setup_logging()
     options = arg_parse.parse_args()
     run_on_directory(
-        src_directory=options['src'],
-        dst_directory=options['dst'],
+        src_directory=options.src,
+        dst_directory=options.dst,
     )
 
 
