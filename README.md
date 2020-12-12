@@ -11,7 +11,7 @@
 ### Из исходников:
 ```
 cd project_path
-pip3 install -e '.[dev]'
+pip3 install -e '.'
 ```
 
 ### С помощью wheel:
