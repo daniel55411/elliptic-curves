@@ -7,10 +7,8 @@ from typing import get_args
 from typing import Type
 from typing import TypeVar
 
-from numpy.polynomial import Polynomial
-
 from src.elliptic.elliptic import Point
-from src.polynomial.utils import get_int_from_polynomial
+from src.polynomial.polynomial import Polynomial
 from src.task import TaskConfig
 from src.task import TaskResult
 from src.task import TaskType
@@ -79,7 +77,7 @@ class PolynomialFormatter(Formatter[Polynomial]):
 
     def format(self, item: Polynomial, context: Dict[str, Any]) -> str:
         return self._int_formatter.format(
-            item=get_int_from_polynomial(item),
+            item=item.bits,
             context=context,
         )
 
@@ -89,6 +87,9 @@ class PointFormatter(Formatter[Point]):
         self._registry = formatters_registry
 
     def format(self, item: Point, context: Dict[str, Any]) -> str:
+        if item.is_infinite():
+            return 'O'
+
         formatter = self._registry.get(type(item.x))
         x_str = formatter.format(item.x, context)
         y_str = formatter.format(item.y, context)

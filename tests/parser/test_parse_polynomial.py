@@ -1,6 +1,7 @@
 import pytest
 
 from src.parser.polynomial import parse_polynomial
+from src.polynomial.polynomial import Polynomial
 
 
 @pytest.mark.parametrize(
@@ -17,4 +18,4 @@ from src.parser.polynomial import parse_polynomial
     ],
 )
 def test_parse_polynomial(polynomial_raw, expected_coefficients):
-    assert list(parse_polynomial(polynomial_raw).coef) == expected_coefficients
+    assert parse_polynomial(polynomial_raw) == Polynomial(expected_coefficients)

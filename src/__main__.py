@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
 from src.app import run_on_directory
+from src.app import set_verbose
 from src.settings import setup_logging
 
 
@@ -19,11 +20,17 @@ arg_parse.add_argument(
     type=int,
     default=None,
 )
+arg_parse.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    help='Включает более подробный вывод',
+)
 
 
 def main():
     setup_logging()
     options = arg_parse.parse_args()
+    set_verbose(options.verbose)
     run_on_directory(
         src_directory=options.src,
         dst_directory=options.dst,

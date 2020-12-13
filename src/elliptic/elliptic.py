@@ -6,13 +6,12 @@ from typing import Optional
 from typing import Type
 from typing import TypeVar
 
-from numpy.polynomial import Polynomial
-
 from src.elliptic.errors import CalculationError
 from src.elliptic.errors import InfinitePoint
 from src.field import Field
 from src.field import GF2PolynomialField
 from src.field import ZpField
+from src.polynomial.polynomial import Polynomial
 
 
 T = TypeVar('T')
@@ -177,7 +176,7 @@ class GF2NotSupersingularCurve(GF2CurveBase):
         second_point: Point[Polynomial],
     ) -> Polynomial:
         return self._field.modulus(
-            (first_point.x ** 2 + self._a * first_point.y) *
+            (first_point.x * first_point.x + self._a * first_point.y) *
             self._field.invert((self._a * first_point.x)),
         )
 
@@ -188,7 +187,7 @@ class GF2NotSupersingularCurve(GF2CurveBase):
         coefficient: Polynomial,
     ) -> Point[Polynomial]:
         x3 = self._field.modulus(
-            coefficient ** 2 + self._a * coefficient +
+            coefficient * coefficient + self._a * coefficient +
             self._b + first_point.x + second_point.x,
         )
         y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
@@ -222,11 +221,11 @@ class GF2SupersingularCurve(GF2CurveBase):
         first_point: Point[Polynomial],
         second_point: Point[Polynomial],
     ) -> Polynomial:
-        if self._a == 0:
+        if self._a == self._field.zero():
             raise CalculationError('Коэффиициент a не может быть 0')
 
         return self._field.modulus(
-            (first_point.x ** 2 + self._b) *
+            (first_point.x * first_point.x + self._b) *
             self._field.invert(self._a),
         )
 
@@ -237,7 +236,7 @@ class GF2SupersingularCurve(GF2CurveBase):
         coefficient: Polynomial,
     ) -> Point[Polynomial]:
         x3 = self._field.modulus(
-            coefficient ** 2 + self._a * coefficient +
+            coefficient * coefficient + self._a * coefficient +
             self._b + first_point.x + second_point.x,
         )
         y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))

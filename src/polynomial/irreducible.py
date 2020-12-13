@@ -1,7 +1,6 @@
-from numpy.polynomial import Polynomial
-
 from src.parser.polynomial import parse_polynomial
 from src.polynomial.errors import UnknownIrreduciblePolynomialPower
+from src.polynomial.polynomial import Polynomial
 
 GF2_IRREDUCIBLE_POLYNOMIALS_DIRECTORY = {
     2: 'x^2+x+1',

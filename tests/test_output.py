@@ -1,5 +1,4 @@
 import pytest
-from numpy.polynomial import Polynomial
 
 from src.elliptic.elliptic import Point
 from src.output import FormattersRegistry
@@ -8,6 +7,7 @@ from src.output import PointFormatter
 from src.output import PolynomialFormatter
 from src.output import TaskConfigFormatter
 from src.output import TaskResultFormatter
+from src.polynomial.polynomial import Polynomial
 from src.task import TaskConfig
 from src.task import TaskResult
 from src.task import TaskType

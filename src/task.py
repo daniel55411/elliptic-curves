@@ -9,14 +9,13 @@ from typing import Tuple
 from typing import TypeVar
 from typing import Union
 
-from numpy.polynomial import Polynomial
-
 from src.elliptic.elliptic import Curve
 from src.elliptic.elliptic import GF2NotSupersingularCurve
 from src.elliptic.elliptic import GF2SupersingularCurve
 from src.elliptic.elliptic import Point
 from src.elliptic.elliptic import ZpCurve
 from src.polynomial.irreducible import get_irreducible_polynomial
+from src.polynomial.polynomial import Polynomial
 
 
 T = TypeVar('T')
@@ -71,7 +70,7 @@ class TaskRunnerConfig(Generic[T]):
             except ValueError:
                 raise ValueError('Неверное число коэффициентов эллиптической кривой')
 
-            bool_args = list(map(lambda poly: list(poly.coef) != [0.], self.curve_args))
+            bool_args = list(map(lambda poly: bool(poly.bits), self.curve_args))
             if bool_args == [True, False, True, False, True]:
                 curve = GF2NotSupersingularCurve(p, a1, a3, a5)
             elif bool_args == [False, True, False, True, True]:

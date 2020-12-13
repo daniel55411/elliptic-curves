@@ -1,10 +1,9 @@
 import re
 
-from numpy.polynomial import Polynomial
-from numpy.polynomial.polynomial import polyzero
-
 from src.parser.common import parse_int
 from src.parser.errors import PolynomialParseError
+from src.polynomial.polynomial import Polynomial
+from src.polynomial.polynomial import polyzero
 
 
 class _GF2IrreduciblePolynomialParser:

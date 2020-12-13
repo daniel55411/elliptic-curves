@@ -2,13 +2,12 @@ from abc import ABCMeta
 from abc import abstractmethod
 from copy import deepcopy
 from typing import Generic
-from typing import List
 from typing import Optional
 from typing import TypeVar
 
-from numpy.polynomial import Polynomial
-from numpy.polynomial.polynomial import polyone
-from numpy.polynomial.polynomial import polyzero
+from src.polynomial.polynomial import Polynomial
+from src.polynomial.polynomial import polyone
+from src.polynomial.polynomial import polyzero
 
 
 T = TypeVar('T')
@@ -34,7 +33,7 @@ class Field(Generic[T], metaclass=ABCMeta):
     def modulus(self, element: T) -> T:
         return element % self._order
 
-    def normalize_element(self, element: T) -> T:
+    def normalize_element(self, element: T) -> T:  # noqa
         return element
 
     @classmethod
@@ -65,26 +64,6 @@ class GF2PolynomialField(Field[Polynomial]):
     def __init__(self, order: Polynomial):
         super().__init__(order, char=2)
 
-    def normalize_element(self, element: Polynomial) -> Polynomial:
-        new_coefficients = [coef % self._char for coef in element.coef]
-        non_zero_coefficients = [abs(coef) for coef in new_coefficients if coef != 0]
-
-        if len(non_zero_coefficients) == 0:
-            return self.zero()
-
-        min_coefficient = min([abs(coef) for coef in new_coefficients if coef != 0])
-
-        if min_coefficient == 0:
-            return self.zero()
-
-        new_coefficients = [coef / min_coefficient for coef in new_coefficients]
-        # Для отладки
-        new_coefficients = [coef % self._char for coef in new_coefficients]
-
-        self._trim_coefficients(new_coefficients)
-
-        return Polynomial(new_coefficients)
-
     @classmethod
     def zero(cls) -> Polynomial:
         return Polynomial(polyzero)
@@ -92,8 +71,3 @@ class GF2PolynomialField(Field[Polynomial]):
     @classmethod
     def one(cls) -> Polynomial:
         return Polynomial(polyone)
-
-    @staticmethod
-    def _trim_coefficients(coefficients: List[float]) -> None:
-        while coefficients[-1] == 0:
-            coefficients.pop()
