@@ -1,9 +1,9 @@
 import pytest
-from numpy.polynomial import Polynomial
 
 from src.elliptic.elliptic import Point
-from src.parser.input_stream import INT_BASE_METRIC
+from src.parser.input_stream import metrics
 from src.parser.input_stream import Parser
+from src.polynomial.polynomial import Polynomial
 from src.task import FieldType
 from src.task import TaskConfig
 from src.task import TaskRunnerConfig
@@ -137,7 +137,7 @@ def test_parser__get_number_base_metric():
     )
 
     assert actual == expected
-    assert INT_BASE_METRIC == {
+    assert metrics.number_base == {
         2: 2,
         8: 1,
         10: 1,
@@ -147,4 +147,4 @@ def test_parser__get_number_base_metric():
 
 @pytest.fixture(autouse=True)
 def reset_metric():
-    INT_BASE_METRIC.clear()
+    metrics.number_base.clear()

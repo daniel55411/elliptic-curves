@@ -11,7 +11,7 @@ from src.output import PointFormatter
 from src.output import PolynomialFormatter
 from src.output import TaskConfigFormatter
 from src.output import TaskResultFormatter
-from src.parser.input_stream import INT_BASE_METRIC
+from src.parser.input_stream import metrics
 from src.parser.input_stream import Parser
 
 
@@ -38,13 +38,26 @@ registry.register(task_config_formatter)
 registry.register(task_result_config)
 
 
+VERBOSE = False
+
+
 def _get_most_common_base():
-    return INT_BASE_METRIC.most_common()[0][0]
+    return metrics.number_base.most_common()[0][0]
 
 
 def _check_error(future: Future):
     if future.exception() is not None:
-        logger.error('Ошибка: %s', str(future.exception()).strip())
+        if not VERBOSE:
+            item = str(future.exception()).strip()
+        else:
+            item = future.exception()
+
+        logger.error('Ошибка: %s', item)
+
+
+def set_verbose(verbose: bool):
+    global VERBOSE
+    VERBOSE = verbose
 
 
 def run(filename: str, dst_directory: str, base: Optional[int]):

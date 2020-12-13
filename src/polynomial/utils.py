@@ -1,14 +1,13 @@
-from numpy.polynomial import Polynomial
+from typing import Iterable
+from typing import List
+from typing import Union
 
 
-def get_polynomial_from_int(number: int) -> Polynomial:
+def convert_num_to_bits_array(number: int) -> List[int]:
     bits = list(map(int, list('{0:0b}'.format(number))[::-1]))
-    return Polynomial(bits)
+    return bits
 
 
-def get_int_from_polynomial(polynomial: Polynomial) -> int:
-    """
-    NOTE: Рассчитывается, что полином над полем с характеристикой 2
-    """
-    bin_str = ''.join(map(lambda f: str(int(f)), polynomial.coef[::-1]))
-    return int(bin_str, base=2)
+def convert_bits_array_to_num(bits: Iterable[Union[int, float]]):
+    bits_raw = ''.join([str(int(bit)) for bit in bits[::-1]])
+    return int(bits_raw, base=2)

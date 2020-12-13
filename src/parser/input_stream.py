@@ -3,6 +3,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 from collections import Counter
 from dataclasses import dataclass
+from threading import local as ThreadLocal
 from typing import Any
 from typing import Callable
 from typing import Generic
@@ -11,13 +12,11 @@ from typing import List
 from typing import TypeVar
 from typing import Union
 
-from numpy.polynomial import Polynomial
-
 from src.elliptic.elliptic import Point
 from src.parser.common import parse_int
 from src.parser.errors import ParserError
 from src.parser.polynomial import parse_polynomial
-from src.polynomial.utils import get_polynomial_from_int
+from src.polynomial.polynomial import Polynomial
 from src.task import FieldType
 from src.task import TaskConfig
 from src.task import TaskRunnerConfig
@@ -27,12 +26,17 @@ from src.task import TaskType
 T = TypeVar('T')
 
 
-INT_BASE_METRIC = Counter()
+class Metrics(ThreadLocal):
+    def __init__(self):
+        self.number_base = Counter()
+
+
+metrics = Metrics()
 
 
 def _parse_int(number_str: str) -> int:
     value, base = parse_int(number_str, return_with_base=True)
-    INT_BASE_METRIC[base] += 1
+    metrics.number_base[base] += 1
 
     return value
 
@@ -69,16 +73,16 @@ class GF2FieldArgsProvider(ArgsProvider):
 class GF2CurveArgsProvider(ArgsProvider):
     def provide(self, input_lines: Iterator[str]) -> List[Any]:
         return [
-            get_polynomial_from_int(_parse_int(next(input_lines))),
-            get_polynomial_from_int(_parse_int(next(input_lines))),
-            get_polynomial_from_int(_parse_int(next(input_lines))),
-            get_polynomial_from_int(_parse_int(next(input_lines))),
-            get_polynomial_from_int(_parse_int(next(input_lines))),
+            parse_int_polynomial(next(input_lines)),
+            parse_int_polynomial(next(input_lines)),
+            parse_int_polynomial(next(input_lines)),
+            parse_int_polynomial(next(input_lines)),
+            parse_int_polynomial(next(input_lines)),
         ]
 
 
 def parse_int_polynomial(number_str: str) -> Polynomial:
-    return get_polynomial_from_int(_parse_int(number_str))
+    return Polynomial(_parse_int(number_str))
 
 
 @dataclass
@@ -211,4 +215,4 @@ class Parser:
         except ParserError:
             raise
         except Exception as e:
-            raise ParserError from e
+            raise ParserError(e) from e

@@ -1,12 +1,12 @@
 import pytest
-from numpy.polynomial import Polynomial
-from numpy.polynomial.polynomial import polyone
-from numpy.polynomial.polynomial import polyzero
 
 from src.elliptic.elliptic import Curve
 from src.elliptic.elliptic import GF2NotSupersingularCurve
 from src.elliptic.elliptic import GF2SupersingularCurve
 from src.elliptic.elliptic import ZpCurve
+from src.polynomial.polynomial import Polynomial
+from src.polynomial.polynomial import polyone
+from src.polynomial.polynomial import polyzero
 from src.task import FieldType
 from src.task import TaskRunnerConfig
 
@@ -98,9 +98,7 @@ def assert_curves_equals(first_curve: Curve, second_curve: Curve):
 def assert_dict_equals(first_dict: dict, second_dict: dict):
     assert len(first_dict) == len(second_dict)
     for key, value in first_dict.items():
-        if isinstance(value, (int, str)):
+        if isinstance(value, (int, str, Polynomial)):
             assert value == second_dict[key]
-        elif isinstance(value, Polynomial):
-            assert value.has_samecoef(second_dict[key])
         else:
             assert_dict_equals(value.__dict__, second_dict[key].__dict__)

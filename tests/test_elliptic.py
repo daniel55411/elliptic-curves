@@ -1,12 +1,12 @@
 import pytest
-from numpy.polynomial import Polynomial
-from numpy.polynomial.polynomial import polyone
-from numpy.polynomial.polynomial import polyzero
 
 from src.elliptic.elliptic import GF2NotSupersingularCurve
 from src.elliptic.elliptic import GF2SupersingularCurve
 from src.elliptic.elliptic import Point
 from src.elliptic.elliptic import ZpCurve
+from src.polynomial.polynomial import Polynomial
+from src.polynomial.polynomial import polyone
+from src.polynomial.polynomial import polyzero
 
 
 def pone() -> Polynomial:

@@ -30,7 +30,7 @@ def load_requirements(*filenames: str) -> list:
 
 setup(
     name=project_name,
-    version='0.0.1',
+    version='0.1.1',
     author='d4n13lzh3',
     author_email='zhe.dan28@gmail.com',
     long_description=open('README.md').read(),
@@ -47,7 +47,6 @@ setup(
     ],
     python_requires='>=3.7',
     packages=find_packages(exclude=['tests']),
-    install_requires=list(load_requirements('requirements.txt')),
     extras_require={
         'dev': list(
             load_requirements(
