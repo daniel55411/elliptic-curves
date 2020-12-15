@@ -84,6 +84,19 @@ def run(filename: str, dst_directory: str, base: Optional[int]):
 
 
 def run_on_directory(src_directory: str, dst_directory: str, base: int):
+    logger.info('Предварительные настройки')
+
+    if not os.path.exists(dst_directory):
+        try:
+            os.mkdir(dst_directory)
+            logger.info(
+                'Создал выходную директорию %s',
+                os.path.abspath(dst_directory),
+            )
+        except FileNotFoundError:
+            logger.error('Ошибка: не удалось создать выходную директорию')
+            return
+
     logger.info(
         'Запустилась обработка директории %s',
         os.path.abspath(src_directory),

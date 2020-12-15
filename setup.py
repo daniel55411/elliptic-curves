@@ -30,7 +30,7 @@ def load_requirements(*filenames: str) -> list:
 
 setup(
     name=project_name,
-    version='0.1.1',
+    version='0.1.2',
     author='d4n13lzh3',
     author_email='zhe.dan28@gmail.com',
     long_description=open('README.md').read(),
