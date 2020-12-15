@@ -12,8 +12,16 @@ arg_parse = ArgumentParser(
         'Документация находится в репозитории проекта в README.md'
     ),
 )
-arg_parse.add_argument('--src', help='Входная директория')
-arg_parse.add_argument('--dst', help='Выходная директория')
+arg_parse.add_argument(
+    '-s', '--src',
+    default='input',
+    help='Входная директория',
+)
+arg_parse.add_argument(
+    '-d', '--dst',
+    default='output',
+    help='Выходная директория',
+)
 arg_parse.add_argument(
     '--base',
     help='Основание системы счисления выходных файлов. Доступные: 2, 8, 10, 16',

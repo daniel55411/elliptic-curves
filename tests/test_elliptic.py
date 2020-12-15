@@ -97,6 +97,7 @@ def test_gf2_not_supersingular_curve__mul(
     assert gf2_not_supersingular_curve.mul(point, scalar) == result
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize(
     'first_point, second_point, result',
     [
@@ -128,6 +129,7 @@ def test_gf2_supersingular_curve__add(
     assert gf2_supersingular_curve.add(first_point, second_point) == result
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize(
     'point, scalar, result',
     [
