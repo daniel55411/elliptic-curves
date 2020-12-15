@@ -118,7 +118,7 @@ class ZpCurve(Curve[int]):
         )
 
     def _second_case_coefficient(self, first_point: Point[int], second_point: Point[int]) -> int:  # noqa
-        if self._field.modulus(first_point.y + second_point.y) == 0:
+        if self._field.modulus(first_point.y + second_point.y) == self._field.zero():
             raise InfinitePoint
 
         raise ValueError(f'{self.__class__.__name__}: Невозможные условия для 2-го случая')
