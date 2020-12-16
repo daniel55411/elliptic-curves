@@ -33,7 +33,9 @@ setup(
     version='0.1.2',
     author='d4n13lzh3',
     author_email='zhe.dan28@gmail.com',
+    description='Учебный проект для сложения точек эллиптической кривой',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     platforms='all',
     classifiers=[
         'Intended Audience :: Developers',
