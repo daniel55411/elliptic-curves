@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
+from itertools import product
 from typing import Generic, Optional, Type, TypeVar
 
 from elliptic_curves.elliptic.errors import CalculationError, InfinitePoint
@@ -20,6 +21,11 @@ class Point(Generic[T]):
 
     def is_infinite(self):
         return self.x is None and self.y is None
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Point):
+            raise TypeError("Other object must be the same type!")
+        return self.x == __o.x and self.y == __o.y
 
 
 class Curve(Generic[T], metaclass=ABCMeta):
@@ -139,6 +145,13 @@ class ZpCurve(Curve[int]):
     def is_on_curve(self, point: Point[int]) -> bool:
         return point.is_infinite() or (self._field.modulus(point.y**2) ==
                                        self._field.modulus(point.x**3 + self._a*point.x + self._b))
+
+    def all_points(self) -> Point[int]:
+        for x, y in product(range(self._field._order), repeat=2):
+            point = Point(x, y)
+            if self.is_on_curve(point):
+                yield point
+        yield Point.infinity()
 
 
 class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):

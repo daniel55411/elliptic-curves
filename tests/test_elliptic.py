@@ -40,6 +40,10 @@ def test_zp_curve__point_on_curve(zp_curve: ZpCurve, point, result):
     assert zp_curve.is_on_curve(point) == result
 
 
+def test_zp_curve__all_points(zp_curve: ZpCurve):
+    assert list(zp_curve.all_points()) == [Point(0, 0), Point(1, 0), Point(2, 0), Point[int].infinity()]
+
+
 @pytest.mark.parametrize(
     'first_point, scalar, result',
     [

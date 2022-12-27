@@ -2,8 +2,7 @@ from typing import List
 
 import pytest
 
-from elliptic_curves.field import GF2PolynomialField
-from elliptic_curves.field import ZpField
+from elliptic_curves.field import GF2PolynomialField, ZpField
 from elliptic_curves.polynomial.polynomial import Polynomial
 
 
