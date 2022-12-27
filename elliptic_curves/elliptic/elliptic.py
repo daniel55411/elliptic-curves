@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Generic, Optional, Type, TypeVar
 
-from elliptic_curves.elliptic.errors import CalculationError, InfinitePoint
+from elliptic_curves.elliptic.errors import (CalculationError, IncorrectOrder,
+                                             InfinitePoint, NotOnCurve)
 from elliptic_curves.field import Field, GF2PolynomialField, ZpField
 from elliptic_curves.polynomial.polynomial import Polynomial
 
@@ -155,8 +156,14 @@ class ZpCurve(Curve[int]):
 
     def point_order(self, point: Point[int]) -> int:
         n = 2
+        if (point == Point.infinity()):
+            raise InfinitePoint("Passed point must be not infinite!")
+        if not self.is_on_curve(point):
+            raise NotOnCurve("Passed point must be on curve!")
         while self.mul(point, n) != Point.infinity() and n <= self._field._order:
             n += 1
+        if (n > self._field._order):
+            raise IncorrectOrder("Can not get the order of the point!")
         return n
 
 

@@ -8,3 +8,9 @@ class InfinitePoint(EllipticCurveError):
 
 class CalculationError(EllipticCurveError):
     pass
+
+class IncorrectOrder(EllipticCurveError):
+    pass
+
+class NotOnCurve(EllipticCurveError):
+    pass
