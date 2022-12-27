@@ -45,6 +45,11 @@ def test_zp_curve__all_points(zp_curve: ZpCurve):
     assert list(zp_curve.all_points()) == [Point(0, 0), Point(1, 0), Point(2, 0), Point[int].infinity()]
 
 
+def test_zp_curve__point_order():
+    curve = ZpCurve(97, 2, 3)
+    assert curve.point_order(Point(3, 6)) == 5
+
+
 @pytest.mark.parametrize(
     'first_point, scalar, result',
     [

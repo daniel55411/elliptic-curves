@@ -153,6 +153,12 @@ class ZpCurve(Curve[int]):
                 yield point
         yield Point.infinity()
 
+    def point_order(self, point: Point[int]) -> int:
+        n = 2
+        while self.mul(point, n) != Point.infinity() and n <= self._field._order:
+            n += 1
+        return n
+
 
 class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):
     def __init__(self, p: Polynomial, a: Polynomial, b: Polynomial, c: Polynomial):
