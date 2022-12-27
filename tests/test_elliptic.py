@@ -22,6 +22,7 @@ def pzero() -> Polynomial:
         (Point(1, 1), Point(1, -1), Point.infinity()),
         (Point(1, 2), Point(2, 1), Point(1, 1)),
         (Point(1, 2), Point(1, 2), Point(2, 2)),
+        (Point(1, 0), Point(2, 0), Point(0, 0)),
     ],
 )
 def test_zp_curve__add(zp_curve, first_point, second_point, result):
