@@ -1,3 +1,4 @@
+import codecs
 import os
 from importlib.machinery import SourceFileLoader
 
@@ -33,7 +34,7 @@ setup(
     author='d4n13lzh3',
     author_email='zhe.dan28@gmail.com',
     description='Учебный проект для сложения точек эллиптической кривой',
-    long_description=open('README.md').read(),
+    long_description=codecs.open("README.md", "r", "utf_8_sig" ).read(),
     long_description_content_type='text/markdown',
     platforms='all',
     classifiers=[
