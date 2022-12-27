@@ -1,12 +1,9 @@
 import pytest
 
-from elliptic_curves.elliptic.elliptic import GF2NotSupersingularCurve
-from elliptic_curves.elliptic.elliptic import GF2SupersingularCurve
-from elliptic_curves.elliptic.elliptic import Point
-from elliptic_curves.elliptic.elliptic import ZpCurve
-from elliptic_curves.polynomial.polynomial import Polynomial
-from elliptic_curves.polynomial.polynomial import polyone
-from elliptic_curves.polynomial.polynomial import polyzero
+from elliptic_curves.elliptic.elliptic import (GF2NotSupersingularCurve,
+                                               GF2SupersingularCurve, Point,
+                                               ZpCurve)
+from elliptic_curves.polynomial.polynomial import Polynomial, polyone, polyzero
 
 
 def pone() -> Polynomial:
@@ -29,6 +26,18 @@ def pzero() -> Polynomial:
 )
 def test_zp_curve__add(zp_curve, first_point, second_point, result):
     assert zp_curve.add(first_point, second_point) == result
+
+
+@pytest.mark.parametrize(
+    'point, result',
+    [
+        (Point(None, None), True),
+        (Point(1, 0), True),
+        (Point(1, 1), False),
+    ],
+)
+def test_zp_curve__point_on_curve(zp_curve: ZpCurve, point, result):
+    assert zp_curve.is_on_curve(point) == result
 
 
 @pytest.mark.parametrize(

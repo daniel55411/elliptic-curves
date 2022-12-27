@@ -1,18 +1,10 @@
-from abc import ABCMeta
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import Generic
-from typing import Optional
-from typing import Type
-from typing import TypeVar
+from typing import Generic, Optional, Type, TypeVar
 
-from elliptic_curves.elliptic.errors import CalculationError
-from elliptic_curves.elliptic.errors import InfinitePoint
-from elliptic_curves.field import Field
-from elliptic_curves.field import GF2PolynomialField
-from elliptic_curves.field import ZpField
+from elliptic_curves.elliptic.errors import CalculationError, InfinitePoint
+from elliptic_curves.field import Field, GF2PolynomialField, ZpField
 from elliptic_curves.polynomial.polynomial import Polynomial
-
 
 T = TypeVar('T')
 
@@ -55,7 +47,8 @@ class Curve(Generic[T], metaclass=ABCMeta):
             return Point.infinity()
 
         k = self._field.normalize_element(k)
-        result_point = self._additive_point(first_point, second_point, coefficient=k)
+        result_point = self._additive_point(
+            first_point, second_point, coefficient=k)
         result_point.x = self._field.normalize_element(result_point.x)
         result_point.y = self._field.normalize_element(result_point.y)
 
@@ -121,7 +114,8 @@ class ZpCurve(Curve[int]):
         if self._field.modulus(first_point.y + second_point.y) == self._field.zero():
             raise InfinitePoint
 
-        raise ValueError(f'{self.__class__.__name__}: Невозможные условия для 2-го случая')
+        raise ValueError(
+            f'{self.__class__.__name__}: Невозможные условия для 2-го случая')
 
     def _third_case_coefficient(self, first_point: Point[int], second_point: Point[int]) -> int:
         return self._field.modulus(
@@ -135,10 +129,16 @@ class ZpCurve(Curve[int]):
         second_point: Point[int],
         coefficient: int,
     ) -> Point[int]:
-        x3 = self._field.modulus(coefficient ** 2 - first_point.x - second_point.x)
-        y3 = self._field.modulus(first_point.y + coefficient * (x3 - first_point.x))
+        x3 = self._field.modulus(
+            coefficient ** 2 - first_point.x - second_point.x)
+        y3 = self._field.modulus(
+            first_point.y + coefficient * (x3 - first_point.x))
 
         return Point(x3, self._field.modulus(-y3))
+
+    def is_on_curve(self, point: Point[int]) -> bool:
+        return point.is_infinite() or (self._field.modulus(point.y**2) ==
+                                       self._field.modulus(point.x**3 + self._a*point.x + self._b))
 
 
 class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):
@@ -168,7 +168,8 @@ class GF2NotSupersingularCurve(GF2CurveBase):
         if self._field.modulus(second_point.y) == self._field.modulus(self._a * first_point.x + first_point.y):
             raise InfinitePoint
 
-        raise CalculationError(f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
+        raise CalculationError(
+            f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
 
     def _third_case_coefficient(
         self,
@@ -190,7 +191,8 @@ class GF2NotSupersingularCurve(GF2CurveBase):
             coefficient * coefficient + self._a * coefficient +
             self._b + first_point.x + second_point.x,
         )
-        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
+        y3 = self._field.modulus(
+            first_point.y + coefficient * (x3 + first_point.x))
 
         return Point(x3, self._field.modulus(self._a * x3 + y3))
 
@@ -214,7 +216,8 @@ class GF2SupersingularCurve(GF2CurveBase):
         if self._field.modulus(second_point.y) == self._field.modulus(self._a + first_point.y):
             raise InfinitePoint
 
-        raise CalculationError(f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
+        raise CalculationError(
+            f'{self.__class__.__name__}: Я не знаю как считать 2 случай')
 
     def _third_case_coefficient(
         self,
@@ -238,6 +241,7 @@ class GF2SupersingularCurve(GF2CurveBase):
         x3 = self._field.modulus(
             coefficient * coefficient + first_point.x + second_point.x,
         )
-        y3 = self._field.modulus(first_point.y + coefficient * (x3 + first_point.x))
+        y3 = self._field.modulus(
+            first_point.y + coefficient * (x3 + first_point.x))
 
         return Point(x3, self._field.modulus(self._a + y3))
