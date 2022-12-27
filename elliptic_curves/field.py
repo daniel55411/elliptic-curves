@@ -5,9 +5,9 @@ from typing import Generic
 from typing import Optional
 from typing import TypeVar
 
-from src.polynomial.polynomial import Polynomial
-from src.polynomial.polynomial import polyone
-from src.polynomial.polynomial import polyzero
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.polynomial.polynomial import polyone
+from elliptic_curves.polynomial.polynomial import polyzero
 
 
 T = TypeVar('T')

@@ -1,14 +1,14 @@
 import pytest
 
-from src.elliptic.elliptic import Curve
-from src.elliptic.elliptic import GF2NotSupersingularCurve
-from src.elliptic.elliptic import GF2SupersingularCurve
-from src.elliptic.elliptic import ZpCurve
-from src.polynomial.polynomial import Polynomial
-from src.polynomial.polynomial import polyone
-from src.polynomial.polynomial import polyzero
-from src.task import FieldType
-from src.task import TaskRunnerConfig
+from elliptic_curves.elliptic.elliptic import Curve
+from elliptic_curves.elliptic.elliptic import GF2NotSupersingularCurve
+from elliptic_curves.elliptic.elliptic import GF2SupersingularCurve
+from elliptic_curves.elliptic.elliptic import ZpCurve
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.polynomial.polynomial import polyone
+from elliptic_curves.polynomial.polynomial import polyzero
+from elliptic_curves.task import FieldType
+from elliptic_curves.task import TaskRunnerConfig
 
 
 NOT_SUPERSINGULAR_CURVE_ARGS = [

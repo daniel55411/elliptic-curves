@@ -9,13 +9,13 @@ from typing import Tuple
 from typing import TypeVar
 from typing import Union
 
-from src.elliptic.elliptic import Curve
-from src.elliptic.elliptic import GF2NotSupersingularCurve
-from src.elliptic.elliptic import GF2SupersingularCurve
-from src.elliptic.elliptic import Point
-from src.elliptic.elliptic import ZpCurve
-from src.polynomial.irreducible import get_irreducible_polynomial
-from src.polynomial.polynomial import Polynomial
+from elliptic_curves.elliptic.elliptic import Curve
+from elliptic_curves.elliptic.elliptic import GF2NotSupersingularCurve
+from elliptic_curves.elliptic.elliptic import GF2SupersingularCurve
+from elliptic_curves.elliptic.elliptic import Point
+from elliptic_curves.elliptic.elliptic import ZpCurve
+from elliptic_curves.polynomial.irreducible import get_irreducible_polynomial
+from elliptic_curves.polynomial.polynomial import Polynomial
 
 
 T = TypeVar('T')

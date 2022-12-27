@@ -7,11 +7,11 @@ from typing import get_args
 from typing import Type
 from typing import TypeVar
 
-from src.elliptic.elliptic import Point
-from src.polynomial.polynomial import Polynomial
-from src.task import TaskConfig
-from src.task import TaskResult
-from src.task import TaskType
+from elliptic_curves.elliptic.elliptic import Point
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.task import TaskConfig
+from elliptic_curves.task import TaskResult
+from elliptic_curves.task import TaskType
 
 
 T = TypeVar('T')

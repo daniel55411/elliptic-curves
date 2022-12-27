@@ -6,12 +6,12 @@ from typing import Optional
 from typing import Type
 from typing import TypeVar
 
-from src.elliptic.errors import CalculationError
-from src.elliptic.errors import InfinitePoint
-from src.field import Field
-from src.field import GF2PolynomialField
-from src.field import ZpField
-from src.polynomial.polynomial import Polynomial
+from elliptic_curves.elliptic.errors import CalculationError
+from elliptic_curves.elliptic.errors import InfinitePoint
+from elliptic_curves.field import Field
+from elliptic_curves.field import GF2PolynomialField
+from elliptic_curves.field import ZpField
+from elliptic_curves.polynomial.polynomial import Polynomial
 
 
 T = TypeVar('T')

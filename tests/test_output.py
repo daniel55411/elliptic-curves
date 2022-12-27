@@ -1,16 +1,16 @@
 import pytest
 
-from src.elliptic.elliptic import Point
-from src.output import FormattersRegistry
-from src.output import IntFormatter
-from src.output import PointFormatter
-from src.output import PolynomialFormatter
-from src.output import TaskConfigFormatter
-from src.output import TaskResultFormatter
-from src.polynomial.polynomial import Polynomial
-from src.task import TaskConfig
-from src.task import TaskResult
-from src.task import TaskType
+from elliptic_curves.elliptic.elliptic import Point
+from elliptic_curves.output import FormattersRegistry
+from elliptic_curves.output import IntFormatter
+from elliptic_curves.output import PointFormatter
+from elliptic_curves.output import PolynomialFormatter
+from elliptic_curves.output import TaskConfigFormatter
+from elliptic_curves.output import TaskResultFormatter
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.task import TaskConfig
+from elliptic_curves.task import TaskResult
+from elliptic_curves.task import TaskType
 
 
 def test_int_formatter__bad_base():

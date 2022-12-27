@@ -1,9 +1,9 @@
 import re
 
-from src.parser.common import parse_int
-from src.parser.errors import PolynomialParseError
-from src.polynomial.polynomial import Polynomial
-from src.polynomial.polynomial import polyzero
+from elliptic_curves.parser.common import parse_int
+from elliptic_curves.parser.errors import PolynomialParseError
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.polynomial.polynomial import polyzero
 
 
 class _GF2IrreduciblePolynomialParser:

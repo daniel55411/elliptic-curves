@@ -1,7 +1,7 @@
 import pytest
 
-from src.parser.polynomial import parse_polynomial
-from src.polynomial.polynomial import Polynomial
+from elliptic_curves.parser.polynomial import parse_polynomial
+from elliptic_curves.polynomial.polynomial import Polynomial
 
 
 @pytest.mark.parametrize(

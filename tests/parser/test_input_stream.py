@@ -1,13 +1,13 @@
 import pytest
 
-from src.elliptic.elliptic import Point
-from src.parser.input_stream import metrics
-from src.parser.input_stream import Parser
-from src.polynomial.polynomial import Polynomial
-from src.task import FieldType
-from src.task import TaskConfig
-from src.task import TaskRunnerConfig
-from src.task import TaskType
+from elliptic_curves.elliptic.elliptic import Point
+from elliptic_curves.parser.input_stream import metrics
+from elliptic_curves.parser.input_stream import Parser
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.task import FieldType
+from elliptic_curves.task import TaskConfig
+from elliptic_curves.task import TaskRunnerConfig
+from elliptic_curves.task import TaskType
 
 
 def test_parser__parse_zp_field():

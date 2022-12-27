@@ -2,11 +2,10 @@ import os
 from importlib.machinery import SourceFileLoader
 
 from pkg_resources import parse_requirements
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 project_name = 'elliptic-curve'
-module_name = 'src'
+module_name = 'elliptic_curves'
 
 module = SourceFileLoader(
     fullname=module_name,
@@ -59,7 +58,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            '{0} = src.__main__:main'.format(project_name),
+            '{0} = elliptic_curves.__main__:main'.format(project_name),
         ],
     },
     include_package_data=True,
