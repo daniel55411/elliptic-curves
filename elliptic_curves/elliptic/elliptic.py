@@ -166,6 +166,9 @@ class ZpCurve(Curve[int]):
             raise IncorrectOrder("Can not get the order of the point!")
         return n
 
+    def order(self) -> int:
+        return self._field._order
+
 
 class GF2CurveBase(Curve[Polynomial], metaclass=ABCMeta):
     def __init__(self, p: Polynomial, a: Polynomial, b: Polynomial, c: Polynomial):
