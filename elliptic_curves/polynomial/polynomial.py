@@ -3,8 +3,8 @@ from typing import Any
 from typing import Iterable
 from typing import Union
 
-from src.polynomial.utils import convert_bits_array_to_num
-from src.polynomial.utils import convert_num_to_bits_array
+from elliptic_curves.polynomial.utils import convert_bits_array_to_num
+from elliptic_curves.polynomial.utils import convert_num_to_bits_array
 
 
 class Polynomial:

@@ -1,6 +1,6 @@
 import pytest
 
-from src.polynomial.polynomial import Polynomial
+from elliptic_curves.polynomial.polynomial import Polynomial
 
 
 def test_polynomial__constructor():

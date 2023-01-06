@@ -5,14 +5,14 @@ from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
-from src.output import FormattersRegistry
-from src.output import IntFormatter
-from src.output import PointFormatter
-from src.output import PolynomialFormatter
-from src.output import TaskConfigFormatter
-from src.output import TaskResultFormatter
-from src.parser.input_stream import metrics
-from src.parser.input_stream import Parser
+from elliptic_curves.output import FormattersRegistry
+from elliptic_curves.output import IntFormatter
+from elliptic_curves.output import PointFormatter
+from elliptic_curves.output import PolynomialFormatter
+from elliptic_curves.output import TaskConfigFormatter
+from elliptic_curves.output import TaskResultFormatter
+from elliptic_curves.parser.input_stream import metrics
+from elliptic_curves.parser.input_stream import Parser
 
 
 logger = logging.getLogger(__name__)

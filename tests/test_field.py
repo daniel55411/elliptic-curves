@@ -2,9 +2,8 @@ from typing import List
 
 import pytest
 
-from src.field import GF2PolynomialField
-from src.field import ZpField
-from src.polynomial.polynomial import Polynomial
+from elliptic_curves.field import GF2PolynomialField, ZpField
+from elliptic_curves.polynomial.polynomial import Polynomial
 
 
 def test_zp_field_invert():

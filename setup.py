@@ -1,12 +1,12 @@
+import codecs
 import os
 from importlib.machinery import SourceFileLoader
 
 from pkg_resources import parse_requirements
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 project_name = 'elliptic-curve'
-module_name = 'src'
+module_name = 'elliptic_curves'
 
 module = SourceFileLoader(
     fullname=module_name,
@@ -34,7 +34,7 @@ setup(
     author='d4n13lzh3',
     author_email='zhe.dan28@gmail.com',
     description='Учебный проект для сложения точек эллиптической кривой',
-    long_description=open('README.md').read(),
+    long_description=codecs.open("README.md", "r", "utf_8_sig" ).read(),
     long_description_content_type='text/markdown',
     platforms='all',
     classifiers=[
@@ -59,7 +59,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            '{0} = src.__main__:main'.format(project_name),
+            '{0} = elliptic_curves.__main__:main'.format(project_name),
         ],
     },
     include_package_data=True,

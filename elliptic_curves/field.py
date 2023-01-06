@@ -1,14 +1,8 @@
-from abc import ABCMeta
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from copy import deepcopy
-from typing import Generic
-from typing import Optional
-from typing import TypeVar
+from typing import Generic, Optional, TypeVar
 
-from src.polynomial.polynomial import Polynomial
-from src.polynomial.polynomial import polyone
-from src.polynomial.polynomial import polyzero
-
+from elliptic_curves.polynomial.polynomial import Polynomial, polyone, polyzero
 
 T = TypeVar('T')
 

@@ -12,15 +12,15 @@ from typing import List
 from typing import TypeVar
 from typing import Union
 
-from src.elliptic.elliptic import Point
-from src.parser.common import parse_int
-from src.parser.errors import ParserError
-from src.parser.polynomial import parse_polynomial
-from src.polynomial.polynomial import Polynomial
-from src.task import FieldType
-from src.task import TaskConfig
-from src.task import TaskRunnerConfig
-from src.task import TaskType
+from elliptic_curves.elliptic.elliptic import Point
+from elliptic_curves.parser.common import parse_int
+from elliptic_curves.parser.errors import ParserError
+from elliptic_curves.parser.polynomial import parse_polynomial
+from elliptic_curves.polynomial.polynomial import Polynomial
+from elliptic_curves.task import FieldType
+from elliptic_curves.task import TaskConfig
+from elliptic_curves.task import TaskRunnerConfig
+from elliptic_curves.task import TaskType
 
 
 T = TypeVar('T')

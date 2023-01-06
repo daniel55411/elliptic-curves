@@ -1,12 +1,9 @@
 import pytest
 
-from src.elliptic.elliptic import GF2NotSupersingularCurve
-from src.elliptic.elliptic import GF2SupersingularCurve
-from src.elliptic.elliptic import Point
-from src.elliptic.elliptic import ZpCurve
-from src.polynomial.polynomial import Polynomial
-from src.polynomial.polynomial import polyone
-from src.polynomial.polynomial import polyzero
+from elliptic_curves.elliptic.elliptic import (GF2NotSupersingularCurve,
+                                               GF2SupersingularCurve, Point,
+                                               ZpCurve)
+from elliptic_curves.polynomial.polynomial import Polynomial, polyone, polyzero
 
 
 def pone() -> Polynomial:
@@ -25,10 +22,32 @@ def pzero() -> Polynomial:
         (Point(1, 1), Point(1, -1), Point.infinity()),
         (Point(1, 2), Point(2, 1), Point(1, 1)),
         (Point(1, 2), Point(1, 2), Point(2, 2)),
+        (Point(1, 0), Point(2, 0), Point(0, 0)),
     ],
 )
 def test_zp_curve__add(zp_curve, first_point, second_point, result):
     assert zp_curve.add(first_point, second_point) == result
+
+
+@pytest.mark.parametrize(
+    'point, result',
+    [
+        (Point(None, None), True),
+        (Point(1, 0), True),
+        (Point(1, 1), False),
+    ],
+)
+def test_zp_curve__point_on_curve(zp_curve: ZpCurve, point, result):
+    assert zp_curve.is_on_curve(point) == result
+
+
+def test_zp_curve__all_points(zp_curve: ZpCurve):
+    assert list(zp_curve.all_points()) == [Point(0, 0), Point(1, 0), Point(2, 0), Point[int].infinity()]
+
+
+def test_zp_curve__point_order():
+    curve = ZpCurve(97, 2, 3)
+    assert curve.point_order(Point(3, 6)) == 5
 
 
 @pytest.mark.parametrize(

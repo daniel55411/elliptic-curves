@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
 
-from src.app import run_on_directory
-from src.app import set_verbose
-from src.settings import setup_logging
+from elliptic_curves.app import run_on_directory
+from elliptic_curves.app import set_verbose
+from elliptic_curves.settings import setup_logging
 
 
 arg_parse = ArgumentParser(

@@ -1,6 +1,6 @@
 import pytest
 
-from src.parser.common import parse_int
+from elliptic_curves.parser.common import parse_int
 
 
 @pytest.mark.parametrize(
